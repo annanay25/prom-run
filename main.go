@@ -48,6 +48,7 @@ var (
 	timeout    = flag.Duration("timeout", 10*time.Minute, "Amount of time to give the command to run.")
 	listenAddr = flag.String("listen-addr", ":9152", "Address to listen on")
 	cwd        = flag.String("working-dir", "", "Working directory for command")
+	loglevel   = flag.String("loglevel", log.GetLevel().String(), "Set log level, one of panic, fatal, error, warn, info, debug, trace")
 
 	outputLock      sync.Mutex
 	outputBuf       []byte
@@ -77,6 +78,13 @@ func main() {
 	}
 	command := flag.Args()[0]
 	args := flag.Args()[1:]
+
+	level, err := log.ParseLevel(*loglevel)
+	if err != nil {
+		flag.Usage()
+		os.Exit(2)
+	}
+	log.SetLevel(level)
 
 	go func() {
 		// Run once immediately at startup
