@@ -143,7 +143,7 @@ func run(command string, args []string) {
 		if exiterr, ok := err.(*exec.ExitError); ok {
 			if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
 				code := status.ExitStatus()
-				log.Infof("Command exited with code: %d", code)
+				log.Infof("Command exited with code: %d (%s)", code, err.Error())
 				log.Printf("Output:\n%s", out)
 				statusCode.WithLabelValues(strconv.Itoa(code)).Inc()
 				return
